@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import DeleteCar from './DeleteCar'
+import AddNewCar from './AddNewCar'
 
 function GetallCars(props)
 {
     const url = `https://localhost:7118/cars`
     const [carsData, setCarsData] = useState([])
-
+    const [carObj, setCarObj] = useState(null)
 
     useEffect(() =>
     {
@@ -30,23 +31,32 @@ function GetallCars(props)
     }, [props.count])
 
 
+    const handleCarObj = (carFromCard) =>
+    {
+        setCarObj(carFromCard)
+    }
+
     const carElments = carsData.map(
         car =>
         {
             return (
-                <div className="card m-3 pt-2" style={{ 'width': 200, 'float': 'left' }} key={car.id}>
+                <div onDoubleClick={() => { handleCarObj(car) }} className="card m-3 pt-2" style={{ 'width': 200, 'float': 'left' }} key={car.id}>
                     <div className="card-header">{car.brand}</div>
                     <div className="card-body">{car.type}</div>
                     <div className="card-footer">{car.color}</div>
                     <div className="card-footer">{car.myear}</div>
-                    <div><DeleteCar carId={car.id} handleCount={props.handleCount}/></div>
+                    <div><DeleteCar carId={car.id} handleCount={props.handleCount} /></div>
                 </div>
             )
         }
     )
 
     return (
-        <div>{carElments}</div>
+        <>
+            <AddNewCar handleCount={props.handleCount} carObj={carObj || {}} />
+            <div>{carElments}</div>
+        </>
+
     )
 }
 
